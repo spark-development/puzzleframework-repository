@@ -1,6 +1,6 @@
 {
   "name": "@puzzleframework/repository",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Repository functionality for the Puzzle Framework",
   "main": "index.js",
   "keywords": [
@@ -11,10 +11,10 @@
     "validation"
   ],
   "peerDependencies": {
-    "@puzzleframework/core": "latest",
+    "@puzzleframework/core": "^1.4.1",
     "joi": "^14.3.1",
     "lodash": "^4.17.11",
-    "sequelize": "^5.0.0-beta.15"
+    "sequelize": "^5.0.0-beta.16"
   },
   "author": "Valentin Duricu <valentin.duricu@spark-dev.ro>",
   "license": "SEE LICENSE IN LICENSE.md"

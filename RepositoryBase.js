@@ -28,7 +28,7 @@ class RepositoryBase extends PObject {
     /**
      * The model used by this Repository.
      *
-     * @property {BeastModel}
+     * @property {puzzleframework.core.db.Model}
      * @public
      */
     this.model = puzzle.models.get(model);
@@ -53,11 +53,11 @@ class RepositoryBase extends PObject {
    * passed by the user to the application.
    *
    * @param {Object} data The data sent by the user
-   * @param {boolean} createMode Are we creating a new item?
+   * @param {boolean} [createMode] Are we creating a new item?
    *
    * @return {Object}
    */
-  pickData(data, createMode) {
+  pickData(data, createMode = false) {
     return _.pick(
       data,
       this.isValid(this.validator)
@@ -70,11 +70,11 @@ class RepositoryBase extends PObject {
    * Validate the data passed by the user.
    *
    * @param {Object} data The data that needs validation.
-   * @param {boolean} createMode Are we creating a new item?
+   * @param {boolean} [createMode] Are we creating a new item?
    *
    * @return {Object}
    */
-  validate(data, createMode) {
+  validate(data, createMode = false) {
     return this.isValid(this.validator)
       ? puzzle.Joi.validate(data, this.validator(createMode || false))
       : { error: null };
@@ -83,8 +83,9 @@ class RepositoryBase extends PObject {
   /**
    * Returns all the data that matches the given criteria.
    *
-   * @param {CriteriaBase} criteria The criteria used to filter data.
    * @throws RepositoryException
+   *
+   * @param {CriteriaBase} criteria The criteria used to filter data.
    *
    * @return {Object}
    */
@@ -101,14 +102,15 @@ class RepositoryBase extends PObject {
    * Returns all the data that matches the given criteria,
    * in a paginated way.
    *
-   * @param {CriteriaBase} criteria The criteria used to filter data.
-   * @param {integer} page The number of the page.
-   * @param {integer} pageSize How many elements should we return.
    * @throws RepositoryException
+   *
+   * @param {CriteriaBase} criteria The criteria used to filter data.
+   * @param {number} [page] The number of the page.
+   * @param {number} [pageSize] How many elements should we return.
    *
    * @return {Object}
    */
-  async allPaginated(criteria, page, pageSize) {
+  async allPaginated(criteria, page = 1, pageSize = 10) {
     const resultCriteria = BuildCriteria(criteria);
 
     page = page || 1;
@@ -128,8 +130,9 @@ class RepositoryBase extends PObject {
   /**
    * Returns one element that matches the given criteria.
    *
-   * @param {CriteriaBase} criteria The criteria used to filter data.
    * @throws RepositoryException
+   *
+   * @param {CriteriaBase} criteria The criteria used to filter data.
    *
    * @return {Object}
    */
@@ -158,15 +161,14 @@ class RepositoryBase extends PObject {
    * Creates a new instance of the model in the database.
    *
    * @param {Object} data The data we have to store.
-   * @param {Array} includeAlso What extra models should be included when
-   *                            you create a new model.
+   * @param {Array} includeAlso What extra models should be included when you create a new model.
    * @throws RepositoryException
    *
    * @return {Object}
    */
   async create(data, includeAlso) {
     this._removeBadStuff(data);
-    this._beforeSave(data, "create");
+    await this._beforeSave(data, "create");
 
     try {
       const newModel = await this.model
@@ -182,8 +184,7 @@ class RepositoryBase extends PObject {
    * Creates multiple elements of the model in the database.
    *
    * @param {Array} data The data we have to store.
-   * @param {Array} includeAlso What extra models should be included when
-   *                            you create a new model.
+   * @param {Array|Object} [includeAlso] What extra models should be included when you create a new model.
    * @throws RepositoryException
    *
    * @return {Array|Object}
@@ -192,7 +193,7 @@ class RepositoryBase extends PObject {
     data.forEach((v) => {
       this._removeBadStuff(v);
     });
-    this._beforeSave(data, "bulkCreate");
+    await this._beforeSave(data, "bulkCreate");
 
     try {
       const newModels = await this.model
@@ -241,7 +242,7 @@ class RepositoryBase extends PObject {
    */
   async updateByCriteria(criteria, data) {
     this._removeBadStuff(data);
-    this._beforeSave(data, "update");
+    await this._beforeSave(data, "update");
 
     try {
       const currentModel = await this.model.findOne(BuildCriteria(criteria));
@@ -266,7 +267,7 @@ class RepositoryBase extends PObject {
   async deleteByCriteria(criteria) {
     try {
       let currentModel = await this.model.findOne(BuildCriteria(criteria));
-      currentModel = this._beforeSave(currentModel, "delete");
+      currentModel = await this._beforeSave(currentModel, "delete");
 
       return currentModel.destroy();
     } catch (e) {
@@ -281,7 +282,7 @@ class RepositoryBase extends PObject {
    * @protected
    * @param {Object|Array} model The model(s) we want to do something with.
    * @param {string} when When was this method called.
-   * @param {Object|Array} extraData Data sent by the user.
+   * @param {Object|Array} [extraData] Data sent by the user.
    *
    * @return {Object|Array}
    */
@@ -324,6 +325,7 @@ class RepositoryBase extends PObject {
    * Deletes some illegal elements from the data to be stored in the database.
    *
    * @protected
+   *
    * @param {Object} data The data to be fixed.
    */
   _removeBadStuff(data) {
@@ -341,8 +343,11 @@ class RepositoryBase extends PObject {
    * in order to save the additional models.
    *
    * @protected
-   * @param {Array} include The list of models to be included in the
+   *
+   * @param {Array} [include] The list of models to be included in the
    *                        save method.
+   *
+   * @return {Object}
    */
   _buildInclude(include) {
     if (!this.isValid(include) || include.length === 0) {
