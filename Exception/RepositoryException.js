@@ -14,9 +14,11 @@ class RepositoryException extends PError {
    *
    * @param {string} message The error message to be thrown.
    * @param {string} repository The name of the repository from where the error is thrown.
+   * @param {*} [details=null] Are there any details related to this error?
    */
-  constructor(message, repository) {
+  constructor(message, repository, details = null) {
     super(`[${repository}] ${message}`);
+    this.details = details;
   }
 }
 
