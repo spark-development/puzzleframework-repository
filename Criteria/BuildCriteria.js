@@ -28,7 +28,7 @@ function removeInvalidArray(object, key) {
  * Function used to transform a Class Criteria into a object that can
  * be used by sequelize.
  *
- * @memberOf beast.base.Repository
+ * @memberOf Criteria
  *
  * @param {CriteriaBase} criteria The criteria to be transformed.
  *
@@ -44,7 +44,8 @@ module.exports = (criteria) => {
     attributes: criteria.buildAttributesObject(),
     include: criteria.buildIncludeObject(),
     order: criteria.buildOrderObject(),
-    group: criteria.buildGroupObject()
+    group: criteria.buildGroupObject(),
+    subQuery: criteria.subQuery ? criteria.subQuery : false
   };
 
   removeInvalidObject(toReturn, "where");

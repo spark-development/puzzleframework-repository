@@ -7,7 +7,7 @@ const Sequelize = require("sequelize");
  * Filtering criteria used in repositories to get some specific data.
  *
  * See {@link http://docs.sequelizejs.com/manual/tutorial/querying.html#operators}
- * 
+ *
  * @memberOf beast.base.Repository
  * @extends @puzzleframework.lite.core.PObject
  */
@@ -22,7 +22,7 @@ class CriteriaBase extends PObject {
      * and you need operators for various comparisons.
      *
      * See {@link http://docs.sequelizejs.com/manual/tutorial/querying.html#operators}
-     * 
+     *
      * @public
      * @property {Sequelize.Op}
      */
@@ -72,6 +72,23 @@ class CriteriaBase extends PObject {
      * @property {Array}
      */
     this._order = [];
+
+    /**
+     * Should the limit be included in the subqueries or not?
+     *
+     * @protected
+     * @property {Boolean}
+     */
+    this._subQuery = false;
+  }
+
+  /**
+   * Should the limit be included in the subqueries or not?
+   *
+   * @return {Boolean}
+   */
+  get subQuery() {
+    return this._subQuery;
   }
 
   /**
