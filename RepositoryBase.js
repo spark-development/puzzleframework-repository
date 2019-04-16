@@ -247,7 +247,7 @@ class RepositoryBase extends PObject {
     try {
       const currentModel = await this.model.findOne(BuildCriteria(criteria));
       _.extend(currentModel, data);
-      currentModel.save();
+      await currentModel.save();
 
       return this._afterSave(currentModel, "update", data);
     } catch (e) {
