@@ -110,7 +110,7 @@ class RepositoryBase extends PObject {
       return await this.model
         .findAll(BuildCriteria(criteria));
     } catch (e) {
-      throw new RepositoryException(e.message, this._modelName, e.details);
+      throw new RepositoryException(e.message, this._modelName, e);
     }
   }
 
@@ -139,7 +139,7 @@ class RepositoryBase extends PObject {
           limit: pageSize
         }));
     } catch (e) {
-      throw new RepositoryException(e.message, this._modelName, e.details);
+      throw new RepositoryException(e.message, this._modelName, e);
     }
   }
 
@@ -157,7 +157,7 @@ class RepositoryBase extends PObject {
       return await this.model
         .findOne(BuildCriteria(criteria));
     } catch (e) {
-      throw new RepositoryException(e.message, this._modelName, e.details);
+      throw new RepositoryException(e.message, this._modelName, e);
     }
   }
 
@@ -219,7 +219,7 @@ class RepositoryBase extends PObject {
 
       return this._afterSave(newModel, "create", data);
     } catch (e) {
-      throw new RepositoryException(e.message, this._modelName, e.details);
+      throw new RepositoryException(e.message, this._modelName, e);
     }
   }
 
@@ -250,7 +250,7 @@ class RepositoryBase extends PObject {
 
       return this._afterSave(newModels, "bulkCreate");
     } catch (e) {
-      throw new RepositoryException(e.message, this._modelName, e.details);
+      throw new RepositoryException(e.message, this._modelName, e);
     }
   }
 
@@ -303,7 +303,7 @@ class RepositoryBase extends PObject {
 
       return this._afterSave(currentModel, "update", data);
     } catch (e) {
-      throw new RepositoryException(e.message, this._modelName, e.details);
+      throw new RepositoryException(e.message, this._modelName, e);
     }
   }
 
@@ -323,7 +323,7 @@ class RepositoryBase extends PObject {
 
       return currentModel.destroy();
     } catch (e) {
-      throw new RepositoryException(e.message, this._modelName, e.details);
+      throw new RepositoryException(e.message, this._modelName, e);
     }
   }
 

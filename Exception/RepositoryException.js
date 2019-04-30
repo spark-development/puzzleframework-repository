@@ -14,11 +14,26 @@ class RepositoryException extends PError {
    *
    * @param {string} message The error message to be thrown.
    * @param {string} repository The name of the repository from where the error is thrown.
-   * @param {*} [details=null] Are there any details related to this error?
+   * @param {*} [error=null] Are there any details related to this error?
    */
-  constructor(message, repository, details = null) {
+  constructor(message, repository, error = null) {
     super(`[${repository}] ${message}`);
-    this.details = details;
+
+    if (error === null || error === undefined) {
+      return;
+    }
+
+    if(error.details) {
+      this.details = error.details;
+      return;
+    }
+
+    this.details = [
+      {
+        message: error.original.sqlMessage,
+        errors: error.errors,
+      }
+    ];
   }
 }
 
