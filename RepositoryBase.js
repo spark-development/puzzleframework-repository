@@ -32,13 +32,23 @@ class RepositoryBase extends PObject {
      * @public
      */
     this.model = puzzle.models.get(model);
+
     /**
      * Validator used by the repository to validate data.
      *
-     * @property {Joi}
+     * @property {Joi|null}
      * @public
      */
     this.validator = null;
+
+    /**
+     * Should the validator be called automatically?
+     *
+     * @property {boolean}
+     * @public
+     */
+    this.autoValidation = false;
+
     /**
      * The name of the model used by this repository.
      *
@@ -158,6 +168,30 @@ class RepositoryBase extends PObject {
   }
 
   /**
+   * Auto validate the given element.
+   *
+   * @async
+   *
+   * @protected
+   *
+   * @param {Object} data The data to be validated.
+   * @param {string} [mode=""] The mode which calls the data validation.
+   * @param {Object|null} [originalData=null] The original data from the database.
+   */
+  async _autoValidate(data, mode = "", originalData = null) {
+    const createMode = mode === "create";
+
+    let toValidate = {};
+    if (this.isValid(originalData)) {
+      toValidate = originalData;
+    }
+    _.extend(toValidate, data);
+
+    data = this.pickData(toValidate, createMode);
+    await this.validate(data, createMode);
+  }
+
+  /**
    * Creates a new instance of the model in the database.
    *
    * @param {Object} data The data we have to store.
@@ -171,6 +205,9 @@ class RepositoryBase extends PObject {
     await this._beforeSave(data, "create");
 
     try {
+      if (this.autoValidation) {
+        await this._autoValidate(data, "create");
+      }
       const newModel = await this.model
         .create(data, this._buildInclude(includeAlso));
 
@@ -196,6 +233,12 @@ class RepositoryBase extends PObject {
     await this._beforeSave(data, "bulkCreate");
 
     try {
+      if (this.autoValidation) {
+        for (const element of data) {
+          await this._autoValidate(element, "create");
+        }
+      }
+
       const newModels = await this.model
         .bulkCreate(data, this._buildInclude(includeAlso));
 
@@ -246,6 +289,9 @@ class RepositoryBase extends PObject {
 
     try {
       const currentModel = await this.model.findOne(BuildCriteria(criteria));
+      if (this.autoValidation) {
+        await this._autoValidate(data, "update", currentModel.toJSON());
+      }
       _.extend(currentModel, data);
       await currentModel.save();
 
