@@ -86,7 +86,13 @@ class RepositoryBase extends PObject {
    */
   validate(data, createMode = false) {
     return this.isValid(this.validator)
-      ? puzzle.Joi.validate(data, this.validator(createMode || false))
+      ? puzzle.Joi.validate(
+        data,
+        this.validator(createMode || false),
+        {
+          language: puzzle.models.joiLanguage
+        }
+      )
       : { error: null };
   }
 
