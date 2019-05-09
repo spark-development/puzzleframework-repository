@@ -23,14 +23,14 @@ class RepositoryException extends PError {
       return;
     }
 
-    if(error.details) {
+    if (error.details) {
       this.details = error.details;
       return;
     }
 
     this.details = [
       {
-        message: error.original.sqlMessage,
+        message: error.original ? error.original.sqlMessage : error.message,
         errors: error.errors,
       }
     ];
