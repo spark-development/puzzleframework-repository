@@ -28,7 +28,7 @@ function removeInvalidArray(object, key) {
  * Function used to transform a Class Criteria into a object that can
  * be used by sequelize.
  *
- * @memberOf Criteria
+ * @memberOf @puzzleframework.repository.Criteria
  *
  * @param {CriteriaBase} criteria The criteria to be transformed.
  *

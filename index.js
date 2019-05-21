@@ -7,14 +7,14 @@ const RepositoryLoader = require("./RepositoryLoader");
 /**
  * Repository related module
  *
- * @namespace puzzle.repository
+ * @namespace @puzzleframework.repository
  */
 
 /**
  * Initialization class for the beast.base module.
  *
  * @extends @puzzleframework.lite.puzzle.PServerRuntime
- * @memberOf puzzle.repository
+ * @memberOf @puzzleframework.repository
  */
 class PuzzleRepository extends PRuntime {
   constructor() {

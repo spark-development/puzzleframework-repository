@@ -13,7 +13,7 @@ const RepositoryException = require("./Exception/RepositoryException");
  * to be able to work with a data storage.
  *
  * @abstract
- * @memberOf puzzle.repository
+ * @memberOf @puzzleframework.repository
  * @extends @puzzleframework.lite.core.PObject
  */
 class RepositoryBase extends PObject {

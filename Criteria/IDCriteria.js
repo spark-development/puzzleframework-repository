@@ -5,8 +5,8 @@ const CriteriaBase = require("./CriteriaBase");
 /**
  * ID filter Criteria.
  *
- * @memberOf beast.base.Repository
- * @extends beast.base.Repository.CriteriaBase
+ * @memberOf @puzzleframework.repository.Criteria
+ * @extends @puzzleframework.repository.Exception.CriteriaBase
  */
 class IDCriteria extends CriteriaBase {
   /**

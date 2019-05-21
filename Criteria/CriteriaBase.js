@@ -8,7 +8,7 @@ const Sequelize = require("sequelize");
  *
  * See {@link http://docs.sequelizejs.com/manual/tutorial/querying.html#operators}
  *
- * @memberOf beast.base.Repository
+ * @memberOf @puzzleframework.repository.Criteria
  * @extends @puzzleframework.lite.core.PObject
  */
 class CriteriaBase extends PObject {

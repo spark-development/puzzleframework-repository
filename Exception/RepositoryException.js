@@ -5,7 +5,7 @@ const PError = puzzle.import("exceptions/PError");
 /**
  * Repository error.
  *
- * @memberOf beast.base.Repository
+ * @memberOf @puzzleframework.repository.Exception
  * @extends @puzzleframework.lite.exceptions.PError
  */
 class RepositoryException extends PError {
@@ -30,10 +30,19 @@ class RepositoryException extends PError {
 
     this.details = [
       {
-        message: error.original ? error.original.sqlMessage : error.message,
+        message: this._extractDetailedMessage(error),
         errors: error.errors,
       }
     ];
+  }
+
+  _extractDetailedMessage(error) {
+    console.log(error);
+    if(error.original === undefined || error.original === null) {
+      return error.message;
+    }
+
+    return error.original.sqlMessage || error.message;
   }
 }
 

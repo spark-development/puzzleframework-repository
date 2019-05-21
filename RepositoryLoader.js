@@ -7,7 +7,7 @@ const RepositoryBase = require("./RepositoryBase");
 /**
  * Repository store - used to load repositories in memory.
  *
- * @memberOf beast.base.Repository
+ * @memberOf @puzzleframework.repository
  * @extends @puzzleframework.lite.core.PObject
  */
 class RepositoryLoader extends PObject {
