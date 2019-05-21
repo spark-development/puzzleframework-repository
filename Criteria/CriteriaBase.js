@@ -36,6 +36,13 @@ class CriteriaBase extends PObject {
      */
     this.Sequelize = Sequelize;
     /**
+     * A transaction object if you want the data to be used in a transaction.
+     *
+     * @public
+     * @property {Object}
+     */
+    this.transaction = null;
+    /**
      * A list with models that have to be included.
      *
      * @protected
@@ -139,6 +146,16 @@ class CriteriaBase extends PObject {
    */
   buildGroupObject() {
     return this._group;
+  }
+
+  /**
+   * Returns the object/array used to build the Criteria
+   * for usage with sequelize transactions.
+   *
+   * @return {Object}
+   */
+  buildTransactionObject() {
+    return this._transaction;
   }
 }
 

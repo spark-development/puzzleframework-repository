@@ -28,7 +28,7 @@ class RepositoryBase extends PObject {
     /**
      * The model used by this Repository.
      *
-     * @property {puzzleframework.core.db.Model}
+     * @property {sequelize.Model}
      * @public
      */
     this.model = puzzle.models.get(model);
@@ -201,12 +201,14 @@ class RepositoryBase extends PObject {
    * Creates a new instance of the model in the database.
    *
    * @param {Object} data The data we have to store.
-   * @param {Array} includeAlso What extra models should be included when you create a new model.
+   * @param {Object} [options={}] The options object to include also.
+   * @param {Array|null} [options.include=null] The additional models to include also.
+   * @param {Object|null} [options.transaction=null] The transaction to use for the creation.
    * @throws RepositoryException
    *
    * @return {Object}
    */
-  async create(data, includeAlso) {
+  async create(data, options = {}) {
     this._removeBadStuff(data);
     await this._beforeSave(data, "create");
 
@@ -215,7 +217,7 @@ class RepositoryBase extends PObject {
         await this._autoValidate(data, "create");
       }
       const newModel = await this.model
-        .create(data, this._buildInclude(includeAlso));
+        .create(data, options);
 
       return this._afterSave(newModel, "create", data);
     } catch (e) {
@@ -227,12 +229,14 @@ class RepositoryBase extends PObject {
    * Creates multiple elements of the model in the database.
    *
    * @param {Array} data The data we have to store.
-   * @param {Array|Object} [includeAlso] What extra models should be included when you create a new model.
+   * @param {Object} [options={}] The options object to include also.
+   * @param {Array|null} [options.include=null] The additional models to include also.
+   * @param {Object|null} [options.transaction=null] The transaction to use for the creation.
    * @throws RepositoryException
    *
    * @return {Array|Object}
    */
-  async bulkCreate(data, includeAlso) {
+  async bulkCreate(data, options = {}) {
     data.forEach((v) => {
       this._removeBadStuff(v);
     });
@@ -246,7 +250,7 @@ class RepositoryBase extends PObject {
       }
 
       const newModels = await this.model
-        .bulkCreate(data, this._buildInclude(includeAlso));
+        .bulkCreate(data, options);
 
       return this._afterSave(newModels, "bulkCreate");
     } catch (e) {
@@ -388,27 +392,6 @@ class RepositoryBase extends PObject {
         delete data[element];
       }
     });
-  }
-
-  /**
-   * Reads the include list and builds a object passed to sequelize
-   * in order to save the additional models.
-   *
-   * @protected
-   *
-   * @param {Array} [include] The list of models to be included in the
-   *                        save method.
-   *
-   * @return {Object}
-   */
-  _buildInclude(include) {
-    if (!this.isValid(include) || include.length === 0) {
-      return {};
-    }
-
-    return {
-      include
-    };
   }
 }
 
