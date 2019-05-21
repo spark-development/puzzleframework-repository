@@ -45,11 +45,13 @@ module.exports = (criteria) => {
     include: criteria.buildIncludeObject(),
     order: criteria.buildOrderObject(),
     group: criteria.buildGroupObject(),
+    transaction: criteria.transaction,
     subQuery: criteria.subQuery ? criteria.subQuery : false
   };
 
   removeInvalidObject(toReturn, "where");
   removeInvalidObject(toReturn, "attributes");
+  removeInvalidObject(toReturn, "transaction");
   removeInvalidArray(toReturn, "include");
   removeInvalidArray(toReturn, "order");
   removeInvalidArray(toReturn, "group");
