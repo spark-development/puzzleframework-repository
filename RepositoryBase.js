@@ -269,10 +269,7 @@ class RepositoryBase extends PObject {
    * @return {Object}
    */
   update(id, data, transaction = null) {
-    const criteria = new IDCriteria(id);
-    criteria.transaction = transaction;
-
-    return this.updateByCriteria(criteria, data);
+    return this.updateByCriteria(new IDCriteria(id, transaction), data);
   }
 
   /**
@@ -285,10 +282,7 @@ class RepositoryBase extends PObject {
    * @return {Object}
    */
   delete(id, transaction = null) {
-    const criteria = new IDCriteria(id);
-    criteria.transaction = transaction;
-
-    return this.deleteByCriteria(criteria);
+    return this.deleteByCriteria(new IDCriteria(id, transaction));
   }
 
   /**
