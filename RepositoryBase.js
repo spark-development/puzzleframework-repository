@@ -263,24 +263,32 @@ class RepositoryBase extends PObject {
    *
    * @param {string} id The ID of the element we want to update.
    * @param {Array} data The data we need to store.
+   * @param {Object|null} [transaction=null] The transaction we want to use.
    * @throws RepositoryException
    *
    * @return {Object}
    */
-  update(id, data) {
-    return this.updateByCriteria(new IDCriteria(id), data);
+  update(id, data, transaction = null) {
+    const criteria = new IDCriteria(id);
+    criteria.transaction = transaction;
+
+    return this.updateByCriteria(criteria, data);
   }
 
   /**
    * Deletes the element with the given ID.
    *
    * @param {string} id The ID of the element we want to delete.
+   * @param {Object|null} [transaction=null] The transaction we want to use.
    * @throws RepositoryException
    *
    * @return {Object}
    */
-  delete(id) {
-    return this.deleteByCriteria(new IDCriteria(id));
+  delete(id, transaction = null) {
+    const criteria = new IDCriteria(id);
+    criteria.transaction = transaction;
+
+    return this.deleteByCriteria(criteria);
   }
 
   /**
