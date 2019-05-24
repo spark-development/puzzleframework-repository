@@ -1,6 +1,6 @@
 {
   "name": "@puzzleframework/repository",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Repository functionality for the Puzzle Framework",
   "main": "index.js",
   "keywords": [
