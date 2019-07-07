@@ -342,6 +342,23 @@ class RepositoryBase extends PObject {
   }
 
   /**
+   * Deletes the element with the given find criteria.
+   *
+   * @param {CriteriaBase} criteria The Criteria used to identify the element
+   *                                we want to delete.
+   * @throws RepositoryException
+   *
+   * @return {Object}
+   */
+  async bulkDeleteByCriteria(criteria) {
+    try {
+      await this.model.destroy(BuildCriteria(criteria));
+    } catch (e) {
+      throw new RepositoryException(e.message, this._modelName, e);
+    }
+  }
+
+  /**
    * Called after the save has been performed, in order to perform some
    * other tasks on the data stored in the database.
    *
