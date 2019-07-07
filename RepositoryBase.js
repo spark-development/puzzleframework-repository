@@ -301,6 +301,10 @@ class RepositoryBase extends PObject {
 
     try {
       const currentModel = await this.model.findOne(BuildCriteria(criteria));
+      if (!this.isValid(currentModel)) {
+        return null;
+      }
+
       if (this.autoValidation) {
         await this._autoValidate(data, "update", currentModel.toJSON());
       }
@@ -325,6 +329,10 @@ class RepositoryBase extends PObject {
   async deleteByCriteria(criteria) {
     try {
       let currentModel = await this.model.findOne(BuildCriteria(criteria));
+      if (!this.isValid(currentModel)) {
+        return null;
+      }
+
       currentModel = await this._beforeSave(currentModel, "delete");
 
       return currentModel.destroy();
