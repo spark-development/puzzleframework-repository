@@ -87,6 +87,14 @@ class CriteriaBase extends PObject {
      * @property {Boolean}
      */
     this._subQuery = false;
+
+    /**
+     * Should the limit count only the distinct elements?
+     *
+     * @protected
+     * @property {Boolean}
+     */
+    this._distinct = true;
   }
 
   /**
@@ -96,6 +104,15 @@ class CriteriaBase extends PObject {
    */
   get subQuery() {
     return this._subQuery;
+  }
+
+  /**
+   * Should the limit count only the distinct elements?
+   *
+   * @return {Boolean}
+   */
+  get distinct() {
+    return this._distinct;
   }
 
   /**
