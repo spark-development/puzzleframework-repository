@@ -39,7 +39,10 @@ class RepositoryBase extends PObject {
      * @property {Joi|null}
      * @public
      */
-    this.validator = null;
+    this._validator = null;
+
+    this._validatorCompiled = null;
+    this._validatorCompiledCreate = null;
 
     /**
      * Should the validator be called automatically?
@@ -58,6 +61,20 @@ class RepositoryBase extends PObject {
     this._modelName = model;
   }
 
+  get validator() {
+    return this._validatorCompiled;
+  }
+
+  get validatorCreate() {
+    return this._validatorCompiledCreate;
+  }
+
+  set validator(validator) {
+    this._validator = validator;
+    this._validatorCompiled = puzzle.Joi.compile(validator(false));
+    this._validatorCompiledCreate = puzzle.Joi.compile(validator(true));
+  }
+
   /**
    * Used to extract the correct data from the data
    * passed by the user to the application.
@@ -70,8 +87,8 @@ class RepositoryBase extends PObject {
   pickData(data, createMode = false) {
     return _.pick(
       data,
-      this.isValid(this.validator)
-        ? Object.keys(this.validator(createMode || false))
+      this.isValid(this._validator)
+        ? Object.keys(this._validator)
         : Object.keys(data)
     );
   }
@@ -85,15 +102,20 @@ class RepositoryBase extends PObject {
    * @return {Object}
    */
   validate(data, createMode = false) {
-    return this.isValid(this.validator)
-      ? puzzle.Joi.validate(
-        data,
-        this.validator(createMode || false),
-        {
+    if (!this.isValid(this._validator)) {
+      return { error: null };
+    }
+
+    const validator = createMode ? this.validatorCreate : this.validator;
+
+    return validator.validate(
+      data,
+      {
+        errors: {
           language: puzzle.models.joiLanguage
         }
-      )
-      : { error: null };
+      }
+    );
   }
 
   /**
