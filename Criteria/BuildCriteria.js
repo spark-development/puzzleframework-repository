@@ -46,8 +46,8 @@ module.exports = (criteria) => {
     order: criteria.buildOrderObject(),
     group: criteria.buildGroupObject(),
     transaction: criteria.transaction,
-    subQuery: criteria.subQuery ? criteria.subQuery : false,
-    distinct: criteria.distinct ? criteria.distinct : true
+    subQuery: criteria.subQuery !== undefined && criteria.subQuery !== null ? criteria.subQuery : false,
+    distinct: criteria.distinct !== undefined && criteria.distinct !== null ? criteria.distinct : true
   };
 
   removeInvalidObject(toReturn, "where");
